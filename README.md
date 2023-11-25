@@ -23,8 +23,8 @@ To use this application, ensure the following dependencies are installed:
 
 ## Setup
 
-1. Clone this repository to your local machine using `git clone https://github.com/your-username/your-repository-name.git`.
-2. Install the necessary dependencies using `pip install -r requirements.txt` (make sure to create a `requirements.txt` file containing all your dependencies).
+1. Clone this repository to your local machine using `git clone https://github.com/RayaneMelDz/IndeedAI.git`.
+2. Install the necessary dependencies using `pip install -r requirements.txt`.
 
 ## Usage
 
