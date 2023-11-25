@@ -1,0 +1,2 @@
+selenium==3.141.0
+openai==0.10.2
