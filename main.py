@@ -11,6 +11,11 @@ def update_progress(value):
     root.update_idletasks()
 
 def run_scraper():
+
+    with open('cv.txt','r') as file:
+        cv = file.read()
+
+
     job_title = job_title_entry.get()
     location = location_entry.get()
     
@@ -19,22 +24,40 @@ def run_scraper():
     scraper = IndeedJobScraper(job_title, location)
     jobs = scraper.jobs
     update_progress(30)  # Mise à jour après le scraping
+    status_label.config(text="Scrapped New jobs Requests...")
+
 
     writer = JobDescriptionWriter(api_key)
 
     for i, job in enumerate(jobs):
         job['presentation_letter'] = writer.compose_presentation_letter(job['description'])
-        update_progress(30 + 30 * (i + 1) / len(jobs))  # Mise à jour pendant la génération des lettres
+        update_progress(50)  # Mise à jour pendant la génération des lettres
 
     with open('updated_jobs.csv', 'w', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['title', 'description', 'location', 'link', 'presentation_letter']
+        fieldnames = ['title', 'description', 'location', 'link', 'presentation_letter', 'analyse']
+        csv_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        csv_writer.writeheader()
+        for job in jobs:
+            csv_writer.writerow(job)
+
+    update_progress(80)  # Mise à jour lorsque tout est terminé
+    status_label.config(text="Writing personalized Letters...")
+
+    for i, job in enumerate(jobs):
+        job['analyse'] = writer.evaluation_cv(cv,job['description'])
+        update_progress(90)  # Mise à jour pendant la génération des lettres
+
+    with open('updated_jobs.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['title', 'description', 'location', 'link', 'presentation_letter', 'analyse']
         csv_writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         csv_writer.writeheader()
         for job in jobs:
             csv_writer.writerow(job)
 
     update_progress(100)  # Mise à jour lorsque tout est terminé
-    status_label.config(text="Scraping and Processing Completed!")
+    status_label.config(text="Analyze completed")
+
+
 
 def start_scraping_thread():
     threading.Thread(target=run_scraper).start()

@@ -24,6 +24,7 @@ class IndeedJobScraper:
         service = Service(ChromeDriverManager().install())
         self.browser = webdriver.Chrome(service=service)
         self.browser.get("https://emplois.ca.indeed.com/")
+        self.browser.implicitly_wait(1)
 
         # Remplir les champs de recherche
         self.browser.find_element(By.ID, "text-input-what").send_keys(self.job_title)
